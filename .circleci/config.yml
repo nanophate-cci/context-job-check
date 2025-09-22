@@ -1,0 +1,83 @@
+version: 2.1
+
+jobs:
+  # Job WITHOUT context
+  build:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run:
+          name: Build Step
+          command: echo "Hello, this is the build job - no context needed!"
+
+  # Job WITH dev context
+  dev-job:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run:
+          name: Dev Job
+          command: |
+            echo "Hello, this is the dev job!"
+            echo "Using dev context variable: ${DEV_VAR}"
+
+  # Job WITH staging context  
+  staging-job:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run:
+          name: Staging Job
+          command: |
+            echo "Hello, this is the staging job!"
+            echo "Using staging context variable: ${STAGING_VAR}"
+
+  # Job WITH production context
+  prod-job:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run:
+          name: Production Job
+          command: |
+            echo "Hello, this is the production job!"
+            echo "Using prod context variable: ${PROD_VAR}"
+
+  # Another job WITHOUT context
+  test:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run:
+          name: Test Step
+          command: echo "Hello, this is the test job - running without context!"
+
+workflows:
+  version: 2
+  main-workflow:
+    jobs:
+      # Jobs WITHOUT context
+      - build
+      - test:
+          requires:
+            - build
+
+      # Jobs WITH different contexts
+      - dev-job:
+          requires:
+            - test
+          context:
+            - dev-context
+
+      - staging-job:
+          requires:
+            - dev-job
+          context:
+            - staging-context
+
+      - prod-job:
+          requires:
+            - staging-job
+          context:
+            - prod-context
