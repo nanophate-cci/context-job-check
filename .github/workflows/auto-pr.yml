@@ -1,0 +1,31 @@
+name: Auto PR
+on:
+  workflow_dispatch:        # run manually
+  schedule:
+    - cron: "0 3 * * *"     # or run daily at 3am UTC
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # or your default branch
+
+      # 👇 just create a file directly here
+      - name: Create a test file
+        run: |
+          echo "Hello from GitHub Actions" > hello.txt
+          date >> hello.txt
+
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          branch: bot/auto-update
+          title: "chore: add hello.txt"
+          commit-message: "chore: add hello.txt"
+          body: "This PR was created automatically by the Auto PR workflow."
+          labels: automated
+          delete-branch: true
