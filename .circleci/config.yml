@@ -55,6 +55,39 @@ jobs:
 
 workflows:
   version: 2
+  cron-workflow:
+    triggers:
+      - schedule:
+          cron: "0,10,20,30,40,50 * * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      # Jobs WITHOUT context
+      - build
+      - test:
+          requires:
+            - build
+
+      # Jobs WITH different contexts
+      - dev-job:
+          requires:
+            - test
+          context:
+            - dev-context
+
+      - staging-job:
+          requires:
+            - dev-job
+          context:
+            - staging-context
+
+      - prod-job:
+          requires:
+            - staging-job
+          context:
+            - prod-context
   main-workflow:
     jobs:
       # Jobs WITHOUT context
