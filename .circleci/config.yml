@@ -55,14 +55,14 @@ jobs:
 
 workflows:
   version: 2
-  cron-workflow:
-    triggers:
-      - schedule:
-          cron: "0,05,10,20,30,40,50 * * * *"
-          filters:
-            branches:
-              only:
-                - main
+  #cron-workflow:
+  #  triggers:
+  #    - schedule:
+  #        cron: "0,05,10,20,30,40,50 * * * *"
+  #        filters:
+  #          branches:
+  #            only:
+  #              - main
     jobs:
       # Jobs WITHOUT context
       - build
