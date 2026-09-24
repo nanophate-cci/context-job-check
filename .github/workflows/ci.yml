@@ -1,0 +1,14 @@
+name: gha-on-circleci repro
+
+on:
+  push:
+    branches: [main, gha-pipeline-repro]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify marker
+        run: echo "GHA workflow executed on CircleCI infrastructure"
