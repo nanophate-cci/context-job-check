@@ -5,6 +5,7 @@ jobs:
   build:
     docker:
       - image: cimg/base:current
+    resource_class: medium.gen3
     steps:
       - checkout
       - run:
